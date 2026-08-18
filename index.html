@@ -3,413 +3,2299 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio • BINTANG | Cyber Security</title>
-    
-    <!-- FONTAWESOME ICONS (CDN) - INI YANG LO MINTA -->
+    <title>Bintang | Engineering Security</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
     <style>
+        /* ============================================
+           ROOT & RESET
+           ============================================ */
+        :root {
+            --white: #ffffff;
+            --gray-50: #fafafa;
+            --gray-100: #f5f5f5;
+            --gray-200: #e5e5e5;
+            --gray-300: #d4d4d4;
+            --gray-400: #a3a3a3;
+            --gray-500: #737373;
+            --gray-600: #525252;
+            --gray-700: #404040;
+            --gray-800: #262626;
+            --gray-900: #171717;
+            --gray-950: #0a0a0a;
+            --black: #000000;
+            --accent: #6366f1;
+            --accent-light: #818cf8;
+            --accent-dim: rgba(99, 102, 241, 0.08);
+            --accent-glow: rgba(99, 102, 241, 0.15);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --glass-border-hover: rgba(255, 255, 255, 0.12);
+            --glass-shine: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 50%);
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 20px rgba(0,0,0,0.4);
+            --shadow-lg: 0 10px 50px rgba(0,0,0,0.5);
+            --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.08);
+            --radius-sm: 12px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --transition: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+            scrollbar-color: var(--gray-700) transparent;
+        }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--gray-700); border-radius: 10px; }
+
         body {
-            margin: 0;
-            overflow: hidden;
-            font-family: 'Courier New', monospace;
-            background-color: black;
-            color: #0ff;
+            font-family: var(--font-sans);
+            background: var(--gray-950);
+            color: var(--gray-300);
+            overflow-x: hidden;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
-        #info-panel {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: rgba(0, 10, 20, 0.8);
-            backdrop-filter: blur(8px);
-            border-left: 4px solid #0ff;
-            padding: 20px 30px;
-            border-radius: 8px;
-            max-width: 380px;
-            z-index: 10;
-            box-shadow: 0 0 40px rgba(0, 255, 255, 0.2);
+
+        ::selection {
+            background: var(--accent);
+            color: var(--white);
+        }
+
+        a { text-decoration: none; color: inherit; }
+        img { max-width: 100%; display: block; }
+
+        /* ============================================
+           PRELOADER
+           ============================================ */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            background: var(--gray-950);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 32px;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+
+        #preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
             pointer-events: none;
         }
-        #info-panel h1 {
-            margin: 0;
-            font-size: 1.8rem;
-            letter-spacing: 3px;
-            color: #fff;
-            text-shadow: 0 0 15px #0ff;
+
+        .preloader-spinner {
+            width: 48px;
+            height: 48px;
+            border: 2px solid var(--glass-border);
+            border-top-color: var(--gray-400);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
         }
-        #info-panel .alias {
-            color: #f0f;
-            font-size: 0.9rem;
-            letter-spacing: 5px;
-        }
-        #info-panel .title {
-            color: #ffaa00;
-            border-bottom: 1px dashed #0ff;
-            padding-bottom: 8px;
-            margin-top: 5px;
-        }
-        #info-panel .title i {
-            color: #f0f;
-            margin: 0 5px;
-        }
-        #info-panel p {
-            font-size: 0.85rem;
-            line-height: 1.5;
-            color: #b0f0f0;
-        }
-        .skill-bar {
-            background: #111;
-            height: 6px;
-            margin: 8px 0;
-            width: 100%;
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .preloader-bar-track {
+            width: 200px;
+            height: 2px;
+            background: var(--glass-border);
             border-radius: 10px;
             overflow: hidden;
         }
-        .skill-fill {
+
+        .preloader-bar-fill {
             height: 100%;
-            background: linear-gradient(90deg, #0ff, #f0f);
             width: 0%;
+            background: linear-gradient(90deg, var(--gray-600), var(--gray-300));
             border-radius: 10px;
-            box-shadow: 0 0 10px #0ff;
+            transition: width 0.1s;
         }
-        #info-panel .detail-footer i {
-            margin-right: 6px;
-            width: 18px;
-            text-align: center;
+
+        .preloader-text {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 4px;
+            color: var(--gray-600);
+            text-transform: uppercase;
         }
-        #info-panel .detail-footer {
-            margin-top: 10px;
-            font-size: 0.8rem;
-            border-top: 1px solid #0ff3;
-            padding-top: 10px;
-            color: #aaccdd;
-        }
-        #right-panel {
-            position: absolute;
-            bottom: 30px;
-            right: 30px;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(5px);
-            padding: 15px 25px;
-            border-radius: 10px;
-            border: 1px solid #0ff;
-            z-index: 10;
-            text-align: right;
+
+        /* ============================================
+           AMBIENT BACKGROUND
+           ============================================ */
+        .ambient-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
             pointer-events: none;
+            overflow: hidden;
         }
-        #right-panel div {
-            margin: 5px 0;
-        }
-        #right-panel a {
-            color: #0ff;
-            text-decoration: none;
-            pointer-events: auto;
-            font-weight: bold;
-            transition: 0.2s;
-        }
-        #right-panel a:hover {
-            color: #f0f;
-            text-shadow: 0 0 10px #f0f;
-        }
-        #right-panel i {
-            margin-right: 10px;
-            width: 20px;
-            text-align: center;
-        }
-        #tagline {
+
+        .ambient-orb {
             position: absolute;
-            bottom: 100px;
-            left: 40px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: rgba(255,255,255,0.15);
-            z-index: 5;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.03;
+        }
+
+        .ambient-orb:nth-child(1) {
+            width: 600px;
+            height: 600px;
+            background: var(--accent);
+            top: -200px;
+            right: -100px;
+            animation: float1 25s ease-in-out infinite;
+        }
+
+        .ambient-orb:nth-child(2) {
+            width: 500px;
+            height: 500px;
+            background: #8b5cf6;
+            bottom: -200px;
+            left: -100px;
+            animation: float2 30s ease-in-out infinite;
+        }
+
+        .ambient-orb:nth-child(3) {
+            width: 400px;
+            height: 400px;
+            background: #06b6d4;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: float3 20s ease-in-out infinite;
+        }
+
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0); }
+            33% { transform: translate(-80px, 60px); }
+            66% { transform: translate(40px, -40px); }
+        }
+
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0); }
+            33% { transform: translate(60px, -80px); }
+            66% { transform: translate(-40px, 40px); }
+        }
+
+        @keyframes float3 {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.3); }
+        }
+
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.015;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 256px;
+        }
+
+        /* ============================================
+           GLASS CARD MIXIN
+           ============================================ */
+        .glass {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--glass-shine);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .glass:hover {
+            border-color: var(--glass-border-hover);
+        }
+
+        /* ============================================
+           NAVIGATION
+           ============================================ */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 16px 0;
+            transition: all 0.5s var(--transition);
+        }
+
+        nav.scrolled {
+            padding: 10px 0;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-mark {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--gray-700), var(--gray-800));
+            border: 1px solid var(--glass-border-hover);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-display);
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .logo-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-name {
+            font-family: var(--font-display);
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: -0.3px;
+        }
+
+        .logo-role {
+            font-size: 10px;
+            color: var(--gray-500);
             letter-spacing: 2px;
             text-transform: uppercase;
-            writing-mode: vertical-lr;
-            text-orientation: mixed;
-            border-right: 2px solid rgba(0,255,255,0.2);
-            padding-right: 10px;
+            font-weight: 500;
         }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 4px;
+        }
+
+        .nav-links a {
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--gray-500);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--white);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-cta {
+            padding: 8px 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--white);
+            background: var(--gray-800);
+            border: 1px solid var(--glass-border-hover);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-family: var(--font-sans);
+        }
+
+        .nav-cta:hover {
+            background: var(--gray-700);
+            transform: translateY(-1px);
+        }
+
+        .nav-hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 4px;
+            z-index: 1001;
+        }
+
+        .nav-hamburger span {
+            width: 22px;
+            height: 1.5px;
+            background: var(--gray-400);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(4px, 5px);
+        }
+        .nav-hamburger.active span:nth-child(2) { opacity: 0; }
+        .nav-hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(4px, -5px);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(40px);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-links {
+            list-style: none;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .mobile-menu-links a {
+            display: block;
+            padding: 16px 40px;
+            font-family: var(--font-display);
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--gray-500);
+            transition: all 0.3s ease;
+            border-radius: 12px;
+        }
+
+        .mobile-menu-links a:hover {
+            color: var(--white);
+            background: rgba(255,255,255,0.03);
+        }
+
+        /* ============================================
+           HERO SECTION
+           ============================================ */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 24px 80px;
+            z-index: 2;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            position: relative;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px 6px 8px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            margin-bottom: 32px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--gray-400);
+            backdrop-filter: blur(10px);
+        }
+
+        .badge-dot {
+            width: 6px;
+            height: 6px;
+            background: #22c55e;
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+            animation: dotPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .hero-overline {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            letter-spacing: 4px;
+            color: var(--gray-600);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(44px, 8vw, 88px);
+            font-weight: 800;
+            letter-spacing: -3px;
+            line-height: 0.95;
+            margin-bottom: 10px;
+            color: var(--white);
+            position: relative;
+        }
+
+        .hero-title .line {
+            display: block;
+            overflow: hidden;
+        }
+
+        .hero-title .line span {
+            display: inline-block;
+            transform: translateY(100%);
+            animation: slideUp 0.8s var(--transition) forwards;
+        }
+
+        .hero-title .line:nth-child(2) span {
+            animation-delay: 0.1s;
+        }
+
+        .hero-title .line:nth-child(3) span {
+            animation-delay: 0.2s;
+        }
+
+        @keyframes slideUp {
+            to { transform: translateY(0); }
+        }
+
+        .hero-title .gradient-text {
+            background: linear-gradient(135deg, var(--gray-300), var(--white), var(--gray-400));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-title .dim {
+            color: var(--gray-700);
+            -webkit-text-fill-color: var(--gray-700);
+        }
+
+        .hero-subtitle {
+            font-size: 17px;
+            color: var(--gray-500);
+            max-width: 520px;
+            margin: 28px auto 40px;
+            line-height: 1.8;
+            font-weight: 400;
+        }
+
+        .hero-subtitle strong {
+            color: var(--gray-300);
+            font-weight: 600;
+        }
+
+        .hero-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 60px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 28px;
+            background: var(--white);
+            color: var(--gray-950);
+            font-family: var(--font-sans);
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg), 0 0 40px rgba(255,255,255,0.1);
+        }
+
+        .btn-ghost {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 28px;
+            background: transparent;
+            color: var(--gray-400);
+            font-family: var(--font-sans);
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-ghost:hover {
+            color: var(--white);
+            border-color: var(--glass-border-hover);
+            background: var(--glass-bg);
+            transform: translateY(-2px);
+        }
+
+        .hero-metrics {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            flex-wrap: wrap;
+        }
+
+        .metric {
+            text-align: center;
+        }
+
+        .metric-value {
+            font-family: var(--font-display);
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: -1px;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: var(--gray-600);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        .hero-scroll {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--gray-700);
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            z-index: 2;
+        }
+
+        .scroll-indicator {
+            width: 20px;
+            height: 32px;
+            border: 1.5px solid var(--gray-700);
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .scroll-indicator::before {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 6px;
+            background: var(--gray-500);
+            border-radius: 3px;
+            animation: scrollDown 1.5s ease-in-out infinite;
+        }
+
+        @keyframes scrollDown {
+            0%, 100% { top: 6px; opacity: 1; }
+            100% { top: 18px; opacity: 0; }
+        }
+
+        /* Floating Jet */
+        .floating-jet {
+            position: absolute;
+            top: 80px;
+            right: -80px;
+            width: 50px;
+            opacity: 0.06;
+            animation: jetFloat 20s linear infinite;
+            z-index: 0;
+        }
+
+        .floating-jet img {
+            width: 100%;
+            filter: grayscale(1) brightness(3);
+        }
+
+        @keyframes jetFloat {
+            0% { transform: translateX(0) translateY(0); right: -80px; }
+            100% { right: calc(100vw + 80px); transform: translateX(0) translateY(30px); }
+        }
+
+        /* ============================================
+           SECTION COMMONS
+           ============================================ */
+        section {
+            position: relative;
+            z-index: 2;
+        }
+
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .section-padding {
+            padding: 120px 0;
+        }
+
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: var(--gray-600);
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .section-label::before {
+            content: '';
+            width: 20px;
+            height: 1px;
+            background: var(--gray-700);
+        }
+
+        .section-heading {
+            font-family: var(--font-display);
+            font-size: clamp(30px, 5vw, 44px);
+            font-weight: 700;
+            letter-spacing: -1.5px;
+            color: var(--white);
+            line-height: 1.15;
+            margin-bottom: 16px;
+        }
+
+        .section-desc {
+            font-size: 16px;
+            color: var(--gray-500);
+            max-width: 500px;
+            line-height: 1.7;
+        }
+
+        .section-header {
+            margin-bottom: 60px;
+        }
+
+        .divider {
+            width: 100%;
+            height: 1px;
+            background: var(--glass-border);
+        }
+
+        /* ============================================
+           ABOUT
+           ============================================ */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 60px;
+            align-items: start;
+        }
+
+        .about-photo {
+            position: relative;
+        }
+
+        .photo-card {
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 4/5;
+            background: linear-gradient(145deg, var(--gray-800), var(--gray-900));
+            border: 1px solid var(--glass-border);
+        }
+
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            color: var(--gray-800);
+            position: relative;
+        }
+
+        .photo-placeholder::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--glass-shine);
+        }
+
+        .photo-float-card {
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            padding: 16px 20px;
+            border-radius: var(--radius-sm);
+            background: rgba(23, 23, 23, 0.9);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .float-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent-dim), transparent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-light);
+            font-size: 16px;
+        }
+
+        .float-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .float-value {
+            font-family: var(--font-display);
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .float-label {
+            font-size: 11px;
+            color: var(--gray-500);
+        }
+
+        .about-content {
+            padding-top: 10px;
+        }
+
+        .about-text {
+            font-size: 16px;
+            color: var(--gray-400);
+            line-height: 1.9;
+            margin-bottom: 24px;
+        }
+
+        .about-text strong,
+        .about-text span.hl {
+            color: var(--gray-200);
+            font-weight: 600;
+        }
+
+        .about-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 32px;
+        }
+
+        .detail-item {
+            padding: 18px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .detail-item:hover {
+            border-color: var(--glass-border-hover);
+            transform: translateY(-2px);
+        }
+
+        .detail-label {
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gray-600);
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            color: var(--gray-200);
+            font-weight: 600;
+        }
+
+        /* ============================================
+           SKILLS
+           ============================================ */
+        .skills-categories {
+            display: flex;
+            flex-direction: column;
+            gap: 48px;
+        }
+
+        .skill-cat-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .cat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: var(--gray-400);
+        }
+
+        .cat-title {
+            font-family: var(--font-display);
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--gray-200);
+        }
+
+        .cat-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--glass-border), transparent);
+        }
+
+        .skills-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 12px;
+        }
+
+        .skill-tile {
+            padding: 20px;
+            border-radius: var(--radius-sm);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            transition: all 0.4s var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-tile::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--glass-shine);
+            pointer-events: none;
+        }
+
+        .skill-tile:hover {
+            border-color: var(--glass-border-hover);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .skill-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .skill-icon-wrap {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: var(--gray-400);
+        }
+
+        .skill-pct {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        .skill-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-200);
+            margin-bottom: 10px;
+        }
+
+        .skill-bar-bg {
+            width: 100%;
+            height: 3px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .skill-bar-fill {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--gray-600), var(--gray-300));
+            border-radius: 10px;
+            transition: width 1.5s var(--transition);
+        }
+
+        .skill-tile.visible .skill-bar-fill {
+            width: var(--w);
+        }
+
+        /* ============================================
+           PROJECTS
+           ============================================ */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .project-card {
+            border-radius: var(--radius-lg);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 36px;
+            transition: all 0.4s var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--glass-shine);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .project-card:hover {
+            border-color: var(--glass-border-hover);
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .project-card > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .project-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .project-icon-box {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--gray-800), var(--gray-900));
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .project-icon-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: grayscale(1) brightness(2) contrast(0.8);
+            opacity: 0.7;
+        }
+
+        .project-badge-tag {
+            padding: 4px 12px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--glass-border);
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--gray-400);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .project-title {
+            font-family: var(--font-display);
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .project-title .spaced {
+            letter-spacing: 6px;
+        }
+
+        .project-subtitle {
+            font-size: 13px;
+            color: var(--gray-500);
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        .project-desc {
+            font-size: 14px;
+            color: var(--gray-500);
+            line-height: 1.8;
+            margin-bottom: 24px;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 24px;
+        }
+
+        .project-tags span {
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--glass-border);
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--gray-500);
+            font-family: var(--font-mono);
+        }
+
+        .project-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 20px;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .project-stats-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .ps-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        .ps-item i {
+            font-size: 12px;
+            color: var(--gray-600);
+        }
+
+        .project-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--gray-400);
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .project-link-btn:hover {
+            color: var(--white);
+            border-color: var(--glass-border-hover);
+            background: rgba(255,255,255,0.03);
+        }
+
+        /* ============================================
+           CONTACT
+           ============================================ */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 40px;
+        }
+
+        .contact-left {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .contact-text {
+            font-size: 16px;
+            color: var(--gray-500);
+            line-height: 1.8;
+        }
+
+        .contact-channels {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .channel {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .channel:hover {
+            border-color: var(--glass-border-hover);
+            transform: translateX(6px);
+        }
+
+        .channel-icon-box {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: var(--gray-400);
+            flex-shrink: 0;
+        }
+
+        .channel-details {
+            flex: 1;
+        }
+
+        .channel-name {
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gray-600);
+            font-weight: 600;
+        }
+
+        .channel-val {
+            font-size: 14px;
+            color: var(--gray-300);
+            font-weight: 500;
+        }
+
+        .channel-arrow {
+            color: var(--gray-700);
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .channel:hover .channel-arrow {
+            color: var(--gray-400);
+            transform: translateX(4px);
+        }
+
+        /* Contact Form */
+        .contact-form-card {
+            border-radius: var(--radius-lg);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 36px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-form-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--glass-shine);
+            pointer-events: none;
+        }
+
+        .form-title {
+            font-family: var(--font-display);
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--gray-600);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            color: var(--gray-200);
+            font-family: var(--font-sans);
+            font-size: 14px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: var(--gray-700);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--gray-600);
+            background: rgba(0,0,0,0.5);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .form-submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--white);
+            color: var(--gray-950);
+            font-family: var(--font-sans);
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .form-submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(255,255,255,0.1);
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        footer {
+            position: relative;
+            z-index: 2;
+            border-top: 1px solid var(--glass-border);
+            padding: 60px 24px 30px;
+        }
+
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 48px;
+            flex-wrap: wrap;
+            gap: 32px;
+        }
+
+        .footer-brand {
+            max-width: 300px;
+        }
+
+        .footer-brand-name {
+            font-family: var(--font-display);
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 8px;
+        }
+
+        .footer-brand-desc {
+            font-size: 13px;
+            color: var(--gray-600);
+            line-height: 1.7;
+        }
+
+        .footer-socials {
+            display: flex;
+            gap: 10px;
+        }
+
+        .social-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: var(--gray-500);
+            transition: all 0.3s ease;
+        }
+
+        .social-btn:hover {
+            border-color: var(--glass-border-hover);
+            color: var(--white);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            padding-top: 24px;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .footer-copy {
+            font-size: 12px;
+            color: var(--gray-700);
+        }
+
+        .footer-ver {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--gray-800);
+        }
+
+        /* ============================================
+           BACK TO TOP
+           ============================================ */
+        .back-top {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--gray-900);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-500);
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .back-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-top:hover {
+            border-color: var(--glass-border-hover);
+            color: var(--white);
+            transform: translateY(-3px);
+        }
+
+        /* ============================================
+           REVEAL ANIMATIONS
+           ============================================ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s var(--transition);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 1024px) {
+            .about-grid { grid-template-columns: 1fr; gap: 40px; }
+            .about-photo { max-width: 350px; margin: 0 auto; }
+            .projects-grid { grid-template-columns: 1fr; }
+            .contact-grid { grid-template-columns: 1fr; }
+        }
+
         @media (max-width: 768px) {
-            #info-panel { max-width: 200px; padding: 10px; top: 10px; left: 10px; }
-            #info-panel h1 { font-size: 1.2rem; }
-            #right-panel { bottom: 10px; right: 10px; padding: 10px; font-size: 0.8rem; }
-            #tagline { display: none; }
+            .nav-links, .nav-cta { display: none; }
+            .nav-hamburger { display: flex; }
+            .hero { padding: 140px 20px 80px; }
+            .about-details { grid-template-columns: 1fr; }
+            .hero-metrics { gap: 32px; }
+            .section-padding { padding: 80px 0; }
+            .floating-jet { display: none; }
+            .hero-scroll { display: none; }
+            .skills-row { grid-template-columns: 1fr 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 480px) {
+            .skills-row { grid-template-columns: 1fr; }
+            .hero-actions { flex-direction: column; align-items: center; }
+            .hero-metrics { flex-direction: column; gap: 20px; }
+            .footer-top { flex-direction: column; }
+            .project-card { padding: 24px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- UI OVERLAY DENGAN ICON FONTAWESOME -->
-    <div id="info-panel">
-        <h1>SADEWA <span style="color:#f0f;">BINTANG</span></h1>
-        <div class="alias"><i class="fas fa-tag" style="color:#0ff; margin-right:8px;"></i> CALLSIGN: NIGHTFALL</div>
-        <div class="title">
-            <i class="fas fa-bolt"></i> ENGINEERING SECURITY <i class="fas fa-bolt"></i>
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="preloader-spinner"></div>
+        <div class="preloader-bar-track">
+            <div class="preloader-bar-fill" id="preloaderFill"></div>
         </div>
-        <p style="margin-top:12px;">Arsitek keamanan siber & pemburu exploit. Founder K R E E K (Game Security) & jarVisXstar (Security Library).</p>
-        
-        <div style="margin-top:10px;">
-            <div><i class="fas fa-shield-halved" style="color:#0ff; width:18px;"></i> Cyber Forensics <span style="float:right;">92%</span></div>
-            <div class="skill-bar"><div class="skill-fill" style="width:92%;"></div></div>
-            <div><i class="fas fa-microchip" style="color:#f0f; width:18px;"></i> Reverse Eng. <span style="float:right;">88%</span></div>
-            <div class="skill-bar"><div class="skill-fill" style="width:88%;"></div></div>
-            <div><i class="fas fa-code" style="color:#ffaa00; width:18px;"></i> Python/C++ <span style="float:right;">85%</span></div>
-            <div class="skill-bar"><div class="skill-fill" style="width:85%;"></div></div>
-            <div><i class="fas fa-user-secret" style="color:#ff5500; width:18px;"></i> Pentesting <span style="float:right;">80%</span></div>
-            <div class="skill-bar"><div class="skill-fill" style="width:80%;"></div></div>
-        </div>
-
-        <div class="detail-footer">
-            <div><i class="fas fa-school" style="color:#0ff;"></i> SMAN Purwoharjo</div>
-            <div><i class="fas fa-rocket" style="color:#f0f;"></i> Founder @KREEK</div>
-            <div><i class="fas fa-lock" style="color:#ffaa00;"></i> Founder @jarVisXstar</div>
-        </div>
+        <div class="preloader-text">Loading</div>
     </div>
 
-    <div id="right-panel">
-        <div><i class="fas fa-envelope" style="color:#ffaa00;"></i> dwatu8720@gmail.com</div>
-        <div><i class="fab fa-github" style="color:#ffffff;"></i> <a href="#" target="_blank">github.com/bintang657</a></div>
-        <div><i class="fab fa-instagram" style="color:#E4405F;"></i> <a href="#" target="_blank">@sadewaze</a></div>
+    <!-- Ambient Background -->
+    <div class="ambient-bg">
+        <div class="ambient-orb"></div>
+        <div class="ambient-orb"></div>
+        <div class="ambient-orb"></div>
+    </div>
+    <div class="noise-overlay"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-inner">
+            <a href="#home" class="nav-logo">
+                <div class="logo-mark">B</div>
+                <div class="logo-info">
+                    <span class="logo-name">Bintang</span>
+                    <span class="logo-role">Security Engineer</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#home" class="active" data-sec="home">Home</a></li>
+                <li><a href="#about" data-sec="about">About</a></li>
+                <li><a href="#skills" data-sec="skills">Skills</a></li>
+                <li><a href="#projects" data-sec="projects">Projects</a></li>
+                <li><a href="#contact" data-sec="contact">Contact</a></li>
+            </ul>
+            <a href="#contact" class="nav-cta">Let's Talk</a>
+            <div class="nav-hamburger" id="hamburger">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <ul class="mobile-menu-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
     </div>
 
-    <div id="tagline">"Mengamankan Data, Menghancurkan Eksploitasi"</div>
+    <!-- Hero -->
+    <section class="hero" id="home">
+        <div class="floating-jet" id="jet">
+            <img src="https://cdn-icons-png.flaticon.com/512/3125/3125713.png" alt="jet">
+        </div>
 
-    <!-- THREE.JS -->
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "https://unpkg.com/three@0.128.0/build/three.module.js"
-            }
-        }
-    </script>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="badge-dot"></span>
+                Available for opportunities
+            </div>
 
-    <script type="module">
-        import * as THREE from 'three';
-        import { OrbitControls } from 'https://unpkg.com/three@0.128.0/examples/jsm/controls/OrbitControls.js';
+            <div class="hero-overline">Engineering Security</div>
 
-        // --- SETUP SCENE ---
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x050510);
-        scene.fog = new THREE.FogExp2(0x050510, 0.002);
+            <h1 class="hero-title">
+                <div class="line"><span class="dim">Sadewa</span></div>
+                <div class="line"><span class="gradient-text">Bintang</span></div>
+                <div class="line"><span class="dim">Masdiva</span></div>
+            </h1>
 
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(8, 4, 12);
-        camera.lookAt(0, 0, 0);
+            <p class="hero-subtitle">
+                Membangun <strong>benteng digital yang tak tertembus</strong>, merancang arsitektur keamanan
+                dari nol hingga tak terbatas. Setiap baris kode adalah <strong>tameng</strong>,
+                setiap sistem adalah <strong>fortress</strong>.
+            </p>
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        renderer.setPixelRatio(window.devicePixelRatio);
-        document.body.appendChild(renderer.domElement);
+            <div class="hero-actions">
+                <a href="#projects" class="btn-primary">
+                    <i class="fas fa-arrow-down"></i>
+                    Lihat Projects
+                </a>
+                <a href="#contact" class="btn-ghost">
+                    <i class="far fa-paper-plane"></i>
+                    Hubungi Saya
+                </a>
+            </div>
 
-        // --- LIGHTS ---
-        const ambient = new THREE.AmbientLight(0x404060);
-        scene.add(ambient);
-        
-        const dirLight = new THREE.DirectionalLight(0xffccaa, 1.2);
-        dirLight.position.set(5, 10, 7);
-        dirLight.castShadow = true;
-        scene.add(dirLight);
-        
-        const backLight = new THREE.PointLight(0x0ff, 0.8, 20);
-        backLight.position.set(-3, 0, -5);
-        scene.add(backLight);
+            <div class="hero-metrics">
+                <div class="metric">
+                    <div class="metric-value" data-count="50">0</div>
+                    <div class="metric-label">Systems Secured</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" data-count="150">0</div>
+                    <div class="metric-label">Bugs Discovered</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" data-count="2">0</div>
+                    <div class="metric-label">Founded Projects</div>
+                </div>
+            </div>
+        </div>
 
-        const rimLight = new THREE.PointLight(0xf0f, 0.5, 15);
-        rimLight.position.set(0, 5, -5);
-        scene.add(rimLight);
+        <div class="hero-scroll">
+            <div class="scroll-indicator"></div>
+            <span>Scroll</span>
+        </div>
+    </section>
 
-        // --- STARS (Particles) ---
-        const starsGeo = new THREE.BufferGeometry();
-        const starsCount = 3000;
-        const posArray = new Float32Array(starsCount * 3);
-        for (let i = 0; i < starsCount * 3; i += 3) {
-            posArray[i] = (Math.random() - 0.5) * 400;
-            posArray[i+1] = (Math.random() - 0.5) * 400;
-            posArray[i+2] = (Math.random() - 0.5) * 400 - 50; 
-        }
-        starsGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const starsMat = new THREE.PointsMaterial({
-            color: 0x88ddff,
-            size: 0.25,
-            transparent: true,
-            blending: THREE.AdditiveBlending
-        });
-        const stars = new THREE.Points(starsGeo, starsMat);
-        scene.add(stars);
+    <!-- About -->
+    <section id="about">
+        <div class="divider"></div>
+        <div class="section-container section-padding">
+            <div class="about-grid">
+                <div class="about-photo reveal">
+                    <div class="photo-card">
+                        <div class="photo-placeholder">
+                            <i class="fas fa-user-astronaut"></i>
+                        </div>
+                    </div>
+                    <div class="photo-float-card">
+                        <div class="float-icon">
+                            <i class="fas fa-shield-halved"></i>
+                        </div>
+                        <div class="float-info">
+                            <span class="float-value">Verified</span>
+                            <span class="float-label">Security Engineer</span>
+                        </div>
+                    </div>
+                </div>
 
-        // --- BUILD FIGHTER JET (Procedural) ---
-        const jet = new THREE.Group();
+                <div class="about-content reveal reveal-delay-1">
+                    <div class="section-header">
+                        <div class="section-label">Tentang Saya</div>
+                        <h2 class="section-heading">Membangun keamanan<br>dari dalam keluar.</h2>
+                    </div>
 
-        // Fuselage (Badan)
-        const bodyMat = new THREE.MeshStandardMaterial({ color: 0x223344, roughness: 0.3, metalness: 0.8, emissive: new THREE.Color(0x112233) });
-        const bodyGeo = new THREE.CylinderGeometry(0.9, 0.4, 4.5, 12);
-        const body = new THREE.Mesh(bodyGeo, bodyMat);
-        body.rotation.x = Math.PI / 2;
-        body.position.z = 0.2;
-        body.castShadow = true;
-        jet.add(body);
+                    <p class="about-text">
+                        Saya <span class="hl">Sadewa Bintang Masdiva</span> — seorang siswa
+                        <span class="hl">SMAN Negeri Purwoharjo</span> dengan passion yang dalam
+                        di bidang <span class="hl">Cybersecurity</span> dan
+                        <span class="hl">Software Engineering</span>.
+                    </p>
+                    <p class="about-text">
+                        Saya percaya bahwa keamanan digital bukan sekadar fitur tambahan —
+                        melainkan <strong>fondasi dari setiap sistem</strong>.
+                        Dari membangun library security hingga memimpin komunitas teknologi,
+                        saya terus mendorong batas untuk menciptakan ekosistem digital
+                        yang <strong>lebih aman dan tangguh</strong>.
+                    </p>
+                    <p class="about-text">
+                        Ketika orang lain melihat dinding, saya melihat pintu.
+                        Ketika orang lain melihat batasan, saya melihat <strong>tantangan untuk dipecahkan</strong>.
+                    </p>
 
-        // Nose (Hidung)
-        const noseMat = new THREE.MeshStandardMaterial({ color: 0x445566, roughness: 0.2, metalness: 0.9, emissive: new THREE.Color(0x001122) });
-        const noseGeo = new THREE.ConeGeometry(0.8, 1.8, 8);
-        const nose = new THREE.Mesh(noseGeo, noseMat);
-        nose.rotation.x = -Math.PI / 2;
-        nose.position.z = 2.8;
-        nose.castShadow = true;
-        jet.add(nose);
+                    <div class="about-details">
+                        <div class="detail-item reveal reveal-delay-1">
+                            <div class="detail-label">Nama Lengkap</div>
+                            <div class="detail-value">Sadewa Bintang Masdiva</div>
+                        </div>
+                        <div class="detail-item reveal reveal-delay-2">
+                            <div class="detail-label">Sekolah</div>
+                            <div class="detail-value">SMAN Negeri Purwoharjo</div>
+                        </div>
+                        <div class="detail-item reveal reveal-delay-3">
+                            <div class="detail-label">Jabatan</div>
+                            <div class="detail-value">Engineering Security</div>
+                        </div>
+                        <div class="detail-item reveal reveal-delay-4">
+                            <div class="detail-label">Lokasi</div>
+                            <div class="detail-value">Purwoharjo, Indonesia</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        // Cockpit (Kaca)
-        const cockpitMat = new THREE.MeshStandardMaterial({ color: 0x88ddff, emissive: new THREE.Color(0x006688), transparent: true, opacity: 0.6, roughness: 0.1, metalness: 0.1 });
-        const cockpitGeo = new THREE.SphereGeometry(0.6, 16, 8, 0, Math.PI*2, 0, Math.PI/2);
-        const cockpit = new THREE.Mesh(cockpitGeo, cockpitMat);
-        cockpit.position.set(0, 0.5, 1.2);
-        cockpit.scale.set(1, 0.4, 0.9);
-        jet.add(cockpit);
+    <!-- Skills -->
+    <section id="skills">
+        <div class="divider"></div>
+        <div class="section-container section-padding">
+            <div class="section-header reveal">
+                <div class="section-label">Keahlian</div>
+                <h2 class="section-heading">Tech Arsenal</h2>
+                <p class="section-desc">
+                    Persenjataan teknis yang saya kuasai untuk membangun, menganalisis,
+                    dan mengamankan sistem digital.
+                </p>
+            </div>
 
-        // Main Wings (Sayap utama)
-        const wingMat = new THREE.MeshStandardMaterial({ color: 0x334455, roughness: 0.4, metalness: 0.7 });
-        const wingGeo = new THREE.BoxGeometry(4.5, 0.1, 1.2);
-        const wing = new THREE.Mesh(wingGeo, wingMat);
-        wing.position.set(0, 0, -0.2);
-        wing.castShadow = true;
-        jet.add(wing);
+            <div class="skills-categories">
+                <!-- Offensive -->
+                <div class="skill-category reveal">
+                    <div class="skill-cat-header">
+                        <div class="cat-icon"><i class="fas fa-crosshairs"></i></div>
+                        <span class="cat-title">Offensive Security</span>
+                        <div class="cat-line"></div>
+                    </div>
+                    <div class="skills-row">
+                        <div class="skill-tile">
+                            <div class="skill-top">
+                                <div class="skill-icon-wrap"><i class="fas fa-bug"></i></div>
+                                <span class="skill-pct">92%</span>
+                            </div>
+                            <div class="skill-name">Penetration Testing</div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="--w: 92%"></div></div>
+                        </div>
+                        <div class="skill-tile">
+                            <div class="skill-top">
+                                <div class="skill-icon-wrap"><i class="fas fa-spider"></i></div>
+                                <span class="skill-pct">88%</span>
+                            </div>
+                            <div class="skill-name">Exploit Development</div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="--w: 88%"></div></div>
+                        </div>
+                        <div class="skill-tile">
+                            <div class="skill-top">
+                                <div class="skill-icon-wrap"><i class="fas fa-network-wired"></i></div>
+                                <span class="skill-pct">85%</span>
+                            </div>
+                            <div class="skill-name">Network Security</div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="--w: 85%"></div></div>
+                        </div>
+                        <div class="skill-tile">
+                            <div class="skill-top">
+                                <div class="skill-icon-wrap"><i class="fas fa-virus"></i></div>
+                                <span class="skill-pct">90%</span>
+                            </div>
+                            <div class="skill-name">Malware Analysis</div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="--w: 90%"></div></div>
+                        </div>
+                    </div>
+                </div>
 
-        // Wing Tips (Ujung sayap miring)
-        const tipMat = new THREE.MeshStandardMaterial({ color: 0x223344, roughness: 0.5, metalness: 0.5 });
-        const tipGeo = new THREE.BoxGeometry(1.2, 0.2, 0.6);
-        const tipL = new THREE.Mesh(tipGeo, tipMat);
-        tipL.position.set(-2.8, 0.1, -0.2);
-        tipL.rotation.z = -0.3;
-        jet.add(tipL);
-        
-        const tipR = new THREE.Mesh(tipGeo, tipMat);
-        tipR.position.set(2.8, 0.1, -0.2);
-        tipR.rotation.z = 0.3;
-        jet.add(tipR);
+                <!-- Defensive -->
+                <div class="skill-category reveal">
+                    <div class="skill-cat-header">
+                        <div class="cat-icon"><i class="fas fa-shield-halved"></i></div>
+                        <span class="cat-title">Defensive Security</span>
+                        <div class="cat-line"></div>
+                    </div>
+                    <div class="skills-row">
+                        <div class="skill-tile">
+                            <div class="skill-top">
+                                <div class="skill-icon-wrap"><i class="fas fa-lock"></i></div>
+                                <span class="skill-pct">94%</span>
+                            </div>
+                            <div class="skill-name">Encryption & Crypto</div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="--w: 94%"></div></div>
+                        </div>
+                        <div class="skill-tile">
+                            <div class="skill-top">
+                                <div class="skill-icon-wrap"><i class="fas fa-fire"></i></div>
+                                <span class="skill-pct">87%</span>
+                            </div>
+                            <div class="skill-name">Firewall & IDS/IPS</div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="--w: 87%"></div></div>
+                        </div>
+                        <div class="skill-tile">
+                            <div class="skill-top">
+                                <div class="skill-icon-wrap"><i class="fas fa-eye"></i></div>
+                                <span class="skill-pct">83%</span>
+                            </div>
+                            <div class="skill-name">SIEM & Monitoring</div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="--w: 83%"></div></div>
+                        </div>
+                        <div class="skill-tile">
+                            <div class="skill-top">
+                                <div class="skill-icon-wrap"><i class="fas fa-user-lock"></i></div>
+                                <span class="skill-pct">89%</span>
+                            </div>
+                            <div class="skill-name">Access Management</div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="--w: 89%"></div></div>
+                        </div>
+                    </div>
+                </div>
 
-        // Tail (Ekor vertikal)
-        const tailMat = new THREE.MeshStandardMaterial({ color: 0x445566, roughness: 0.3, metalness: 0.8 });
-        const tailGeo = new THREE.BoxGeometry(0.1, 1.0, 0.8);
-        const tail = new THREE.Mesh(tailGeo, tailMat);
-        tail.position.set(0, 0.7, -2.2);
-        jet.add(tail);
-        
-        // Tail Horizontal
-        const tailHGeo = new THREE.BoxGeometry(1.6, 0.1, 0.4);
-        const tailH = new THREE.Mesh(tailHGeo, tailMat);
-        tailH.position.set(0, 0.0, -2.4);
-        jet.add(tailH);
+                <!-- Development -->
+                <div class="skill-category reveal">
+                    <div class="skill-cat-header">
+                        <div class="cat-icon"><i class="fas fa-code"></i></div>
+                        <span class="cat-title">Development</span>
+                        <div class="cat-line"></div>
+                    </div>
+                    <div class="skills-row">
+                        <div class="skill-tile">
+                            <div class="skill-top">
+                                <div class="skill-icon-wrap"><i class="fab fa-python"></i></div>
+                                <span class="skill-pct">91%</span>
+                            </div>
+                            <div class="skill-name">Python</div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="--w: 91%"></div></div>
+                        </div>
+                        <div class="skill-tile">
+                            <div class="skill-top">
+                                <div class="skill-icon-wrap"><i class="fab fa-js"></i></div>
+                                <span class="skill-pct">86%</span>
+                            </div>
+                            <div class="skill-name">JavaScript / Node.js</div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="--w: 86%"></div></div>
+                        </div>
+                        <div class="skill-tile">
+                            <div class="skill-top">
+                                <div class="skill-icon-wrap"><i class="fab fa-html5"></i></div>
+                                <span class="skill-pct">84%</span>
+                            </div>
+                            <div class="skill-name">HTML / CSS / React</div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="--w: 84%"></div></div>
+                        </div>
+                        <div class="skill-tile">
+                            <div class="skill-top">
+                                <div class="skill-icon-wrap"><i class="fas fa-database"></i></div>
+                                <span class="skill-pct">80%</span>
+                            </div>
+                            <div class="skill-name">Database & SQL</div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="--w: 80%"></div></div>
+                        </div>
+                    </div>
+                </div>
 
-        // Engine Exhaust (Afterburner glow)
-        const glowMat = new THREE.MeshStandardMaterial({ color: 0xff4400, emissive: new THREE.Color(0xff2200), transparent: true, opacity: 0.8 });
-        const glowGeo = new THREE.CylinderGeometry(0.5, 0.7, 0.3, 8);
-        const glow = new THREE.Mesh(glowGeo, glowMat);
-        glow.rotation.x = Math.PI / 2;
-        glow.position.set(0, 0, -2.4);
-        jet.add(glow);
+                <!-- Tools -->
+                <div class="skill-category reveal">
+                    <div class="skill-cat-header">
+                        <div class="cat-icon"><i class="fas fa-wrench"></i></div>
+                        <span class="cat-title">Tools & Platforms</span>
+                        <div class="cat-line"></div>
+                    </div>
+                    <div class="skills-row">
+                        <div class="skill-tile">
+                            <div class="skill-top">
+                                <div class="skill-icon-wrap"><i class="fab fa-linux"></i></div>
+                                <span class="skill-pct">93%</span>
+                            </div>
+                            <div class="skill-name">Kali Linux</div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="--w: 93%"></div></div>
+                        </div>
+                        <div class="skill-tile">
+                            <div class="skill-top">
+                                <div class="skill-icon-wrap"><i class="fab fa-docker"></i></div>
+                                <span class="skill-pct">88%</span>
+                            </div>
+                            <div class="skill-name">Docker & Kubernetes</div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="--w: 88%"></div></div>
+                        </div>
+                        <div class="skill-tile">
+                            <div class="skill-top">
+                                <div class="skill-icon-wrap"><i class="fab fa-git-alt"></i></div>
+                                <span class="skill-pct">85%</span>
+                            </div>
+                            <div class="skill-name">Git & CI/CD</div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="--w: 85%"></div></div>
+                        </div>
+                        <div class="skill-tile">
+                            <div class="skill-top">
+                                <div class="skill-icon-wrap"><i class="fab fa-aws"></i></div>
+                                <span class="skill-pct">82%</span>
+                            </div>
+                            <div class="skill-name">Cloud Security</div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="--w: 82%"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        // Afterburner Particle System (Api belakang)
-        const particleCount = 300;
-        const particleGeo = new THREE.BufferGeometry();
-        const particlePos = new Float32Array(particleCount * 3);
-        const particleColors = new Float32Array(particleCount * 3);
-        for (let i = 0; i < particleCount; i++) {
-            particlePos[i*3] = (Math.random() - 0.5) * 0.5;
-            particlePos[i*3+1] = (Math.random() - 0.5) * 0.5;
-            particlePos[i*3+2] = -2.5 - Math.random() * 5;
-            // Warna: orange ke kuning
-            particleColors[i*3] = 1.0;
-            particleColors[i*3+1] = 0.5 + Math.random() * 0.5;
-            particleColors[i*3+2] = 0.0;
-        }
-        particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePos, 3));
-        particleGeo.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
-        const particleMat = new THREE.PointsMaterial({
-            size: 0.15,
-            vertexColors: true,
-            blending: THREE.AdditiveBlending,
-            transparent: true,
-            depthWrite: false
-        });
-        const particles = new THREE.Points(particleGeo, particleMat);
-        jet.add(particles);
+    <!-- Projects -->
+    <section id="projects">
+        <div class="divider"></div>
+        <div class="section-container section-padding">
+            <div class="section-header reveal">
+                <div class="section-label">Projects</div>
+                <h2 class="section-heading">Yang sudah saya bangun.</h2>
+                <p class="section-desc">
+                    Proyek-proyek yang saya dirikan dari nol, membangun komunitas
+                    dan tools keamanan untuk ekosistem digital.
+                </p>
+            </div>
 
-        // Tambahkan jet ke scene
-        jet.position.set(0, 0.5, 0);
-        jet.scale.set(0.8, 0.8, 0.8);
-        scene.add(jet);
+            <div class="projects-grid">
+                <!-- KREEK -->
+                <div class="project-card reveal">
+                    <div class="project-top">
+                        <div class="project-icon-box">
+                            <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="kreek">
+                        </div>
+                        <span class="project-badge-tag">Founder</span>
+                    </div>
+                    <h3 class="project-title"><span class="spaced">K R E E K</span></h3>
+                    <p class="project-subtitle">Community Management Platform</p>
+                    <p class="project-desc">
+                        Komunitas eksklusif yang berfokus pada riset dan distribusi tools gaming FreeFire.
+                        Membangun ekosistem dengan ribuan member aktif, sistem manajemen terstruktur,
+                        strategi marketing digital, dan jaringan distribusi yang efisien.
+                    </p>
+                    <div class="project-tags">
+                        <span>Community</span>
+                        <span>Management</span>
+                        <span>Marketing</span>
+                        <span>Leadership</span>
+                    </div>
+                    <div class="project-footer">
+                        <div class="project-stats-row">
+                            <div class="ps-item">
+                                <i class="fas fa-users"></i> 1000+ Members
+                            </div>
+                            <div class="ps-item">
+                                <i class="fas fa-circle-check"></i> Active
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        // --- FLOATING GRID ---
-        const gridHelper = new THREE.GridHelper(20, 20, 0x0ff, 0x33aaff);
-        gridHelper.position.y = -1.5;
-        scene.add(gridHelper);
+                <!-- JarVisXstar -->
+                <div class="project-card reveal reveal-delay-1">
+                    <div class="project-top">
+                        <div class="project-icon-box">
+                            <img src="https://cdn-icons-png.flaticon.com/512/2092/2092663.png" alt="jarvis">
+                        </div>
+                        <span class="project-badge-tag">Founder</span>
+                    </div>
+                    <h3 class="project-title">JarVisXstar</h3>
+                    <p class="project-subtitle">Security Library for Web & Apps</p>
+                    <p class="project-desc">
+                        Library keamanan komprehensif untuk website dan aplikasi. Menyediakan proteksi
+                        multi-layer termasuk XSS prevention, SQL injection guard, CSRF protection,
+                        rate limiting, dan real-time threat detection.
+                    </p>
+                    <div class="project-tags">
+                        <span>Python</span>
+                        <span>JavaScript</span>
+                        <span>WAF</span>
+                        <span>Encryption</span>
+                        <span>API Security</span>
+                    </div>
+                    <div class="project-footer">
+                        <div class="project-stats-row">
+                            <div class="ps-item">
+                                <i class="fas fa-shield-halved"></i> Multi-Layer
+                            </div>
+                            <div class="ps-item">
+                                <i class="fab fa-github"></i> Open Source
+                            </div>
+                        </div>
+                        <a href="https://github.com/bintang657" target="_blank" class="project-link-btn">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        // --- MOUSE CONTROL ---
-        let mouseX = 0, mouseY = 0;
-        document.addEventListener('mousemove', (e) => {
-            mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-            mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-        });
+    <!-- Contact -->
+    <section id="contact">
+        <div class="divider"></div>
+        <div class="section-container section-padding">
+            <div class="section-header reveal">
+                <div class="section-label">Kontak</div>
+                <h2 class="section-heading">Mari terhubung.</h2>
+                <p class="section-desc">
+                    Punya proyek, ide, atau sekadar ingin berdiskusi?
+                    Saya selalu terbuka untuk percakapan baru.
+                </p>
+            </div>
 
-        // --- RESIZE ---
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
+            <div class="contact-grid">
+                <div class="contact-left reveal">
+                    <p class="contact-text">
+                        Saya selalu antusias untuk terlibat dalam proyek-proyek menarik,
+                        terutama yang berkaitan dengan keamanan siber dan pengembangan software.
+                        Jangan ragu untuk menghubungi saya melalui channel di bawah ini.
+                    </p>
 
-        // --- ANIMATION LOOP ---
-        let clock = new THREE.Clock();
+                    <div class="contact-channels">
+                        <a href="mailto:dwatu8720@gmail.com" class="channel">
+                            <div class="channel-icon-box"><i class="fas fa-envelope"></i></div>
+                            <div class="channel-details">
+                                <div class="channel-name">Email</div>
+                                <div class="channel-val">dwatu8720@gmail.com</div>
+                            </div>
+                            <div class="channel-arrow"><i class="fas fa-arrow-right"></i></div>
+                        </a>
+                        <a href="https://github.com/bintang657" target="_blank" class="channel">
+                            <div class="channel-icon-box"><i class="fab fa-github"></i></div>
+                            <div class="channel-details">
+                                <div class="channel-name">GitHub</div>
+                                <div class="channel-val">bintang657</div>
+                            </div>
+                            <div class="channel-arrow"><i class="fas fa-arrow-right"></i></div>
+                        </a>
+                        <a href="https://instagram.com/sadewaze" target="_blank" class="channel">
+                            <div class="channel-icon-box"><i class="fab fa-instagram"></i></div>
+                            <div class="channel-details">
+                                <div class="channel-name">Instagram</div>
+                                <div class="channel-val">@sadewaze</div>
+                            </div>
+                            <div class="channel-arrow"><i class="fas fa-arrow-right"></i></div>
+                        </a>
+                    </div>
+                </div>
 
-        function animate() {
-            const delta = clock.getDelta();
-            const elapsed = performance.now() * 0.001;
+                <div class="contact-form-card reveal reveal-delay-1">
+                    <h3 class="form-title">Kirim Pesan</h3>
+                    <form id="contactForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Nama</label>
+                                <input type="text" placeholder="Nama lengkap" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" placeholder="email@domain.com" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Subjek</label>
+                            <input type="text" placeholder="Tentang apa?" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Pesan</label>
+                            <textarea placeholder="Tulis pesan Anda di sini..." required></textarea>
+                        </div>
+                        <button type="submit" class="form-submit-btn">
+                            <i class="far fa-paper-plane"></i>
+                            Kirim Pesan
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
 
-            // Rotasi pesawat mengikuti mouse dengan smoothing
-            jet.rotation.y += (mouseX * 0.5 - jet.rotation.y) * 0.05;
-            jet.rotation.x += (-mouseY * 0.3 - jet.rotation.x) * 0.05;
-            
-            // Gerakan hover naik turun
-            jet.position.y = 0.5 + Math.sin(elapsed * 0.8) * 0.3;
-            
-            // Rotasi otomatis lambat
-            jet.rotation.z = Math.sin(elapsed * 0.5) * 0.05;
+    <!-- Footer -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <div class="footer-brand-name">Sadewa Bintang Masdiva</div>
+                    <p class="footer-brand-desc">
+                        Engineering Security — Merancang keamanan digital yang tangguh,
+                        satu arsitektur dalam satu waktu.
+                    </p>
+                </div>
+                <div class="footer-socials">
+                    <a href="https://github.com/bintang657" target="_blank" class="social-btn">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://instagram.com/sadewaze" target="_blank" class="social-btn">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="mailto:dwatu8720@gmail.com" class="social-btn">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span class="footer-copy">&copy; 2025 Sadewa Bintang Masdiva. All rights reserved.</span>
+                <span class="footer-ver">v2.0 — Crafted with precision</span>
+            </div>
+        </div>
+    </footer>
 
-            // Animasi partikel afterburner (refresh posisi)
-            const positions = particles.geometry.attributes.position.array;
-            for (let i = 0; i < particleCount; i++) {
-                positions[i*3+2] -= 0.08;
-                positions[i*3] += (Math.random() - 0.5) * 0.02;
-                positions[i*3+1] += (Math.random() - 0.5) * 0.02;
-                
-                if (positions[i*3+2] < -7.0) {
-                    positions[i*3] = (Math.random() - 0.5) * 0.6;
-                    positions[i*3+1] = (Math.random() - 0.5) * 0.6;
-                    positions[i*3+2] = -2.3 - Math.random() * 0.5;
+    <!-- Back to Top -->
+    <div class="back-top" id="backTop">
+        <i class="fas fa-chevron-up"></i>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // ========================
+        // PRELOADER
+        // ========================
+        (() => {
+            const fill = document.getElementById('preloaderFill');
+            const preloader = document.getElementById('preloader');
+            let p = 0;
+            const interval = setInterval(() => {
+                p += Math.random() * 18;
+                if (p > 100) p = 100;
+                fill.style.width = p + '%';
+                if (p >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        preloader.classList.add('hidden');
+                        initAll();
+                    }, 400);
                 }
-            }
-            particles.geometry.attributes.position.needsUpdate = true;
+            }, 80);
+        })();
 
-            stars.rotation.y += 0.0001;
+        // ========================
+        // NAVIGATION
+        // ========================
+        const navbar = document.getElementById('navbar');
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
 
-            renderer.render(scene, camera);
-            requestAnimationFrame(animate);
-        }
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 60);
 
-        animate();
+            // Active link
+            const sections = document.querySelectorAll('section');
+            let current = '';
+            sections.forEach(s => {
+                if (window.scrollY >= s.offsetTop - 200) {
+                    current = s.getAttribute('id');
+                }
+            });
+            document.querySelectorAll('.nav-links a').forEach(a => {
+                a.classList.toggle('active', a.getAttribute('data-sec') === current);
+            });
 
-        // Touch support
-        document.addEventListener('touchmove', (e) => {
-            if (e.touches.length) {
-                mouseX = (e.touches[0].clientX / window.innerWidth - 0.5) * 2;
-                mouseY = (e.touches[0].clientY / window.innerHeight - 0.5) * 2;
-            }
+            // Back to top
+            document.getElementById('backTop').classList.toggle('visible', window.scrollY > 600);
         });
 
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+            document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+        });
+
+        document.querySelectorAll('.mobile-menu-links a').forEach(a => {
+            a.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                mobileMenu.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                const t = document.querySelector(a.getAttribute('href'));
+                if (t) window.scrollTo({ top: t.offsetTop - 80, behavior: 'smooth' });
+            });
+        });
+
+        document.getElementById('backTop').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // ========================
+        // COUNTER ANIMATION
+        // ========================
+        function animateCounters() {
+            document.querySelectorAll('.metric-value').forEach(el => {
+                const target = +el.dataset.count;
+                const dur = 2000;
+                const inc = target / (dur / 16);
+                let cur = 0;
+                const update = () => {
+                    cur += inc;
+                    if (cur < target) {
+                        el.textContent = Math.floor(cur) + '+';
+                        requestAnimationFrame(update);
+                    } else {
+                        el.textContent = target + '+';
+                    }
+                };
+                update();
+            });
+        }
+
+        // ========================
+        // SCROLL REVEAL
+        // ========================
+        function initReveal() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+
+                        // Skill bars
+                        if (entry.target.classList.contains('skill-category')) {
+                            entry.target.querySelectorAll('.skill-tile').forEach((tile, i) => {
+                                setTimeout(() => tile.classList.add('visible'), i * 80);
+                            });
+                        }
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+            document.querySelectorAll('.reveal, .skill-category').forEach(el => observer.observe(el));
+        }
+
+        // ========================
+        // FORM
+        // ========================
+        document.getElementById('contactForm').addEventListener('submit', e => {
+            e.preventDefault();
+            const btn = e.target.querySelector('.form-submit-btn');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Terkirim!';
+            btn.style.background = '#22c55e';
+            btn.style.color = '#fff';
+            setTimeout(() => {
+                btn.innerHTML = orig;
+                btn.style.background = '';
+                btn.style.color = '';
+                e.target.reset();
+            }, 2500);
+        });
+
+        // ========================
+        // JET RE-ANIMATION
+        // ========================
+        function loopJet() {
+            const jet = document.getElementById('jet');
+            if (!jet) return;
+            jet.style.animation = 'none';
+            jet.offsetHeight;
+            jet.style.animation = 'jetFloat 20s linear infinite';
+        }
+        setInterval(loopJet, 20000);
+
+        // ========================
+        // TILT EFFECT (Desktop)
+        // ========================
+        if (window.innerWidth > 768) {
+            document.querySelectorAll('.project-card, .skill-tile').forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = (y - centerY) / 20;
+                    const rotateY = (centerX - x) / 20;
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = '';
+                });
+            });
+        }
+
+        // ========================
+        // INIT
+        // ========================
+        function initAll() {
+            animateCounters();
+            initReveal();
+        }
+
+        // Console signature
+        console.log(
+            '%c\n  ╭─────────────────────────────────────╮\n  │  Bintang — Engineering Security     │\n  │  "Build walls. Break limits."       │\n  │  github.com/bintang657              │\n  ╰─────────────────────────────────────╯\n',
+            'color: #a3a3a3; font-family: monospace; font-size: 12px;'
+        );
     </script>
 </body>
 </html>
